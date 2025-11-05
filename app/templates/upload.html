@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}Upload CV - CV Scanner{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow border-0">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                    <h2 class="card-title">Upload CV</h2>
+                    <p class="text-muted">Upload a CV file and let AI extract the information automatically</p>
+                </div>
+                
+                <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                    <div class="mb-4">
+                        <label for="file" class="form-label">Select CV File</label>
+                        <div class="upload-area border border-2 border-dashed rounded p-4 text-center" id="uploadArea">
+                            <input type="file" class="form-control d-none" id="file" name="file" accept=".pdf,.docx" required>
+                            <div class="upload-content">
+                                <i class="fas fa-file-upload fa-3x text-muted mb-3"></i>
+                                <h5>Drag & Drop or Click to Upload</h5>
+                                <p class="text-muted">Supported formats: PDF, DOCX (Max 16MB)</p>
+                                <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('file').click()">
+                                    <i class="fas fa-folder-open me-2"></i>Browse Files
+                                </button>
+                            </div>
+                            <div class="selected-file d-none">
+                                <i class="fas fa-file fa-2x text-success mb-2"></i>
+                                <p class="mb-1"><strong id="fileName"></strong></p>
+                                <p class="text-muted mb-2" id="fileSize"></p>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearFile()">
+                                    <i class="fas fa-times me-1"></i>Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" disabled>
+                            <i class="fas fa-magic me-2"></i>Process with AI
+                        </button>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                        </a>
+                    </div>
+                </form>
+                
+                <!-- Processing indicator -->
+                <div class="text-center mt-4 d-none" id="processingIndicator">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Processing CV with AI... This may take a few moments.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4 border-0 bg-light">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-info-circle me-2"></i>What happens next?
+                </h6>
+                <ul class="mb-0 small">
+                    <li>Your CV will be processed by our AI system</li>
+                    <li>Name, email, phone, and skills will be extracted</li>
+                    <li>Experience and education details will be parsed</li>
+                    <li>All data will be stored securely in the database</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const fileInput = document.getElementById('file');
+const uploadArea = document.getElementById('uploadArea');
+const uploadContent = uploadArea.querySelector('.upload-content');
+const selectedFile = uploadArea.querySelector('.selected-file');
+const fileName = document.getElementById('fileName');
+const fileSize = document.getElementById('fileSize');
+const submitBtn = document.getElementById('submitBtn');
+const uploadForm = document.getElementById('uploadForm');
+const processingIndicator = document.getElementById('processingIndicator');
+
+// Drag and drop handlers
+uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('border-primary');
+});
+
+uploadArea.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('border-primary');
+});
+
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('border-primary');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        handleFileSelect(files[0]);
+    }
+});
+
+// Click to upload
+uploadArea.addEventListener('click', (e) => {
+    if (e.target === uploadArea || e.target.closest('.upload-content')) {
+        fileInput.click();
+    }
+});
+
+// File input change
+fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+        handleFileSelect(e.target.files[0]);
+    }
+});
+
+function handleFileSelect(file) {
+    // Validate file type
+    const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!allowedTypes.includes(file.type)) {
+        alert('Please select a PDF or DOCX file.');
+        return;
+    }
+    
+    // Validate file size (16MB)
+    if (file.size > 16 * 1024 * 1024) {
+        alert('File size must be less than 16MB.');
+        return;
+    }
+    
+    // Update UI
+    fileName.textContent = file.name;
+    fileSize.textContent = formatFileSize(file.size);
+    
+    uploadContent.classList.add('d-none');
+    selectedFile.classList.remove('d-none');
+    submitBtn.disabled = false;
+    
+    // Update file input
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    fileInput.files = dt.files;
+}
+
+function clearFile() {
+    fileInput.value = '';
+    uploadContent.classList.remove('d-none');
+    selectedFile.classList.add('d-none');
+    submitBtn.disabled = true;
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// Show processing indicator on form submit
+uploadForm.addEventListener('submit', function() {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+    processingIndicator.classList.remove('d-none');
+});
+</script>
+{% endblock %}

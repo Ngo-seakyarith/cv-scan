@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}CV Scanner - AI-Powered Resume Management{% endblock %}
+
+{% block content %}
+<div class="hero-section bg-gradient text-white py-5 mb-5 rounded">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-brain me-3"></i>AI-Powered CV Scanner
+                </h1>
+                <p class="lead mb-4">
+                    Streamline your HR processes with intelligent CV scanning and candidate management. 
+                    Upload CVs and let AI extract structured information automatically.
+                </p>
+                <div class="d-grid gap-2 d-md-flex">
+                    <a href="{{ url_for('login') }}" class="btn btn-light btn-lg px-4">
+                        <i class="fas fa-sign-in-alt me-2"></i>Get Started
+                    </a>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg px-4">
+                        <i class="fas fa-user-plus me-2"></i>Sign Up
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="fas fa-file-invoice display-1 opacity-75"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="feature-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3">
+                    <i class="fas fa-upload fa-2x"></i>
+                </div>
+                <h5 class="card-title">Smart Upload</h5>
+                <p class="card-text">Upload CVs in PDF or DOCX format and let AI extract all relevant information automatically.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="feature-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3">
+                    <i class="fas fa-search fa-2x"></i>
+                </div>
+                <h5 class="card-title">Advanced Search</h5>
+                <p class="card-text">Filter candidates by skills, experience level, and other criteria to find the perfect match.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="feature-icon bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3">
+                    <i class="fas fa-file-excel fa-2x"></i>
+                </div>
+                <h5 class="card-title">Export Data</h5>
+                <p class="card-text">Export filtered candidate data to Excel for further analysis and reporting.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card border-0 shadow">
+            <div class="card-body p-5">
+                <h3 class="text-center mb-4">
+                    <i class="fas fa-cogs me-2 text-primary"></i>Powered by Advanced AI
+                </h3>
+                <div class="row text-center">
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center justify-content-center mb-2">
+                            <i class="fas fa-robot text-primary me-2"></i>
+                            <strong>Gemini 2.5 Flash</strong>
+                        </div>
+                        <small class="text-muted">Google's latest AI model for intelligent text extraction</small>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center justify-content-center mb-2">
+                            <i class="fas fa-database text-success me-2"></i>
+                            <strong>PostgreSQL</strong>
+                        </div>
+                        <small class="text-muted">Robust database for secure candidate data storage</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

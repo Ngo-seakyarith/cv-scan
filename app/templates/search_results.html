@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results - CV Scanner{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 mb-1">
+            <i class="fas fa-search me-2"></i>Search & Filter
+        </h1>
+        <p class="text-muted">Find candidates that match your criteria</p>
+    </div>
+    <div>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('search') }}" class="row g-3">
+            <div class="col-md-6">
+                <label for="skills" class="form-label">Skills (comma-separated)</label>
+                <input type="text" class="form-control" id="skills" name="skills" 
+                       placeholder="e.g., Python, JavaScript, React" 
+                       value="{{ skills_filter or '' }}">
+                <div class="form-text">Enter skills separated by commas</div>
+            </div>
+            
+            <div class="col-md-4">
+                <label for="min_experience" class="form-label">Minimum Experience (years)</label>
+                <input type="number" class="form-control" id="min_experience" name="min_experience" 
+                       step="0.5" min="0" max="50" 
+                       value="{{ min_experience or '' }}" 
+                       placeholder="e.g., 2.5">
+            </div>
+            
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search me-2"></i>Search
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if request.args.get('skills') or request.args.get('min_experience') %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h5 class="mb-1">Search Results</h5>
+        <p class="text-muted mb-0">
+            Found {{ candidates|length }} candidate(s)
+            {% if skills_filter %}
+                with skills: <strong>{{ skills_filter }}</strong>
+            {% endif %}
+            {% if min_experience %}
+                {% if skills_filter %}and{% endif %}
+                with minimum <strong>{{ min_experience }} years</strong> experience
+            {% endif %}
+        </p>
+    </div>
+    {% if candidates %}
+    <div>
+        <a href="{{ url_for('export_candidates', skills=skills_filter, min_experience=min_experience) }}" 
+           class="btn btn-success">
+            <i class="fas fa-file-excel me-2"></i>Export to Excel
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if candidates %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Contact Info</th>
+                        <th>Skills</th>
+                        <th>Experience</th>
+                        <th>Education</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for candidate in candidates %}
+                    <tr>
+                        <td>
+                            <div>
+                                <strong>{{ candidate.name }}</strong>
+                                {% if candidate.date_of_birth %}
+                                <br><small class="text-muted">DOB: {{ candidate.date_of_birth.strftime('%Y-%m-%d') }}</small>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            {% if candidate.email %}
+                            <div class="mb-1">
+                                <i class="fas fa-envelope text-muted me-1"></i>
+                                <a href="mailto:{{ candidate.email }}" class="text-decoration-none">
+                                    {{ candidate.email }}
+                                </a>
+                            </div>
+                            {% endif %}
+                            {% if candidate.phone %}
+                            <div>
+                                <i class="fas fa-phone text-muted me-1"></i>
+                                {{ candidate.phone }}
+                            </div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if candidate.skills %}
+                            <div class="skills-container">
+                                {% for skill in candidate.skills[:4] %}
+                                <span class="badge bg-secondary me-1 mb-1">{{ skill }}</span>
+                                {% endfor %}
+                                {% if candidate.skills|length > 4 %}
+                                <span class="badge bg-light text-dark">+{{ candidate.skills|length - 4 }}</span>
+                                {% endif %}
+                            </div>
+                            {% else %}
+                            <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="mb-1">
+                                <span class="badge bg-info">{{ candidate.years_of_experience }} years</span>
+                            </div>
+                            {% if candidate.experience %}
+                            <small class="text-muted">
+                                {{ candidate.experience|length }} position(s)
+                            </small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if candidate.education %}
+                            {% for edu in candidate.education[:2] %}
+                            <div class="mb-1">
+                                <small><strong>{{ edu.degree or 'N/A' }}</strong></small>
+                                {% if edu.institution %}
+                                <br><small class="text-muted">{{ edu.institution }}</small>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                            {% if candidate.education|length > 2 %}
+                            <small class="text-muted">+{{ candidate.education|length - 2 }} more</small>
+                            {% endif %}
+                            {% else %}
+                            <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ url_for('view_candidate', id=candidate.id) }}" 
+                                   class="btn btn-outline-primary btn-sm" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ url_for('delete_candidate', id=candidate.id) }}" 
+                                   class="btn btn-outline-danger btn-sm" 
+                                   onclick="return confirm('Are you sure you want to delete this candidate?')" 
+                                   title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No candidates found</h5>
+            <p class="text-muted">Try adjusting your search criteria</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% else %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <i class="fas fa-filter fa-3x text-muted mb-3"></i>
+        <h5 class="text-muted">Use the filters above to search for candidates</h5>
+        <p class="text-muted">Filter by skills, experience level, or both</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
