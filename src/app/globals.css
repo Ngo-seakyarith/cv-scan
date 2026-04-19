@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f6efe4;
+  --surface: #fffaf2;
+  --surface-strong: #fffdf8;
+  --foreground: #1e293b;
+  --muted: #64748b;
+  --line: #e7d7bc;
+  --brand: #0f766e;
+  --brand-2: #f97316;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-space-grotesk);
+  --font-serif: var(--font-fraunces);
+}
+
+body {
+  background:
+    radial-gradient(circle at 10% 10%, rgba(15, 118, 110, 0.16), transparent 35%),
+    radial-gradient(circle at 85% 0%, rgba(249, 115, 22, 0.15), transparent 45%),
+    linear-gradient(160deg, #fffdf8 0%, #f7efe1 100%);
+  color: var(--foreground);
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  border-bottom: 1px solid rgba(231, 215, 188, 0.7);
+  background: color-mix(in srgb, #fffaf2 88%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.brand-mark {
+  font-family: var(--font-fraunces), serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--foreground);
+}
+
+.nav-pill {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--foreground);
+  padding: 0.4rem 0.85rem;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.nav-pill:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--brand) 55%, var(--line));
+}
+
+.nav-pill-accent {
+  border-color: color-mix(in srgb, var(--brand) 40%, var(--line));
+  background: color-mix(in srgb, var(--brand) 14%, #fff);
+}
+
+.card-surface {
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--surface) 88%, white);
+  box-shadow: 0 12px 35px -24px rgba(30, 41, 59, 0.4);
+}
+
+.section-title {
+  font-family: var(--font-fraunces), serif;
+  letter-spacing: 0.01em;
+}
