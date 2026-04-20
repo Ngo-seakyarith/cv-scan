@@ -171,7 +171,7 @@ export default async function SearchPage({
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex flex-wrap gap-1">
-                            {candidate.skills.slice(0, 4).map((skill) => (
+                            {candidate.skills.slice(0, 4).map((skill: string) => (
                               <span
                                 key={`${candidate.id}-${skill}`}
                                 className="rounded-full border border-[var(--line)] bg-white px-2 py-1 text-xs"

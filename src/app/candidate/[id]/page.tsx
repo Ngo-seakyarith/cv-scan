@@ -101,7 +101,7 @@ export default async function CandidateDetailPage({
               {candidate.skills.length === 0 ? (
                 <p className="text-sm text-slate-600">No skills information available.</p>
               ) : (
-                candidate.skills.map((skill) => (
+                candidate.skills.map((skill: string) => (
                   <span
                     key={skill}
                     className="rounded-full border border-[var(--line)] bg-white px-3 py-1 text-xs"
