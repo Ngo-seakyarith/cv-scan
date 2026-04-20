@@ -1,5 +1,7 @@
-import type { Candidate, Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+
+export type Candidate = Prisma.CandidateGetPayload<Prisma.CandidateDefaultArgs>;
 
 export type ExperienceItem = {
   position?: string;
