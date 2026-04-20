@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { GoogleSignInButton } from "@/components/google-sign-in-button";
 import { getServerSession } from "@/lib/session";
@@ -26,13 +25,6 @@ export default async function LoginPage() {
           <GoogleSignInButton label="Continue With Google" />
         </div>
       </section>
-
-      <p className="text-center text-sm text-slate-600">
-        Need an account?{" "}
-        <Link href="/register" className="font-semibold text-teal-700 hover:underline">
-          Create one
-        </Link>
-      </p>
     </div>
   );
 }

@@ -58,11 +58,8 @@ export default async function RootLayout({
                 </>
               ) : (
                 <>
-                  <Link href="/login" className="nav-pill">
-                    Login
-                  </Link>
-                  <Link href="/register" className="nav-pill nav-pill-accent">
-                    Register
+                  <Link href="/sign-in" className="nav-pill">
+                    Sign in
                   </Link>
                 </>
               )}
@@ -75,7 +72,7 @@ export default async function RootLayout({
         </main>
 
         <footer className="mx-auto w-full max-w-6xl px-5 pb-8 pt-2 text-sm text-slate-500 md:px-8">
-          CVScan Next.js 16, Tailwind, Better Auth, Neon, OpenRouter
+          CVScan
         </footer>
       </body>
     </html>

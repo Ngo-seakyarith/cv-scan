@@ -28,38 +28,19 @@ export default function Home() {
           >
             Get Started
           </Link>
-          <Link
-            href="/register"
-            className="rounded-full border border-[var(--line)] bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5"
-          >
-            Sign Up
-          </Link>
-        </div>
-
-        <div className="mt-8 flex flex-wrap items-center gap-2 text-sm text-slate-500">
-          <span className="rounded-full border border-[var(--line)] px-3 py-1">
-            Better Auth + Google OAuth
-          </span>
-          <span className="rounded-full border border-[var(--line)] px-3 py-1">
-            Neon + Prisma
-          </span>
-          <span className="rounded-full border border-[var(--line)] px-3 py-1">
-            OpenRouter parsing
-          </span>
         </div>
       </section>
 
       <section className="card-surface p-8 md:p-10">
         <h2 className="section-title text-2xl font-bold text-slate-900">
-          Flow Kept Intact
+          What You Can Do
         </h2>
         <ol className="mt-5 space-y-4 text-sm leading-6 text-slate-600">
-          <li>1. Sign in with Google</li>
-          <li>2. Open dashboard and review candidate list</li>
-          <li>3. Upload CV and parse with AI</li>
-          <li>4. Search with skill fuzzy matching + min experience</li>
-          <li>5. Open candidate detail, delete when needed</li>
-          <li>6. Export filtered candidates to Excel</li>
+          <li>1. Sign in and access your candidate dashboard</li>
+          <li>2. Upload resumes in PDF or DOCX format</li>
+          <li>3. Automatically extract candidate profile information</li>
+          <li>4. Filter candidates by skills and experience</li>
+          <li>5. Review details, clean records, and export shortlists</li>
         </ol>
       </section>
     </div>
