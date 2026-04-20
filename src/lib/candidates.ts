@@ -128,7 +128,7 @@ function fuzzySimilarity(a: string, b: string): number {
 function parseSkillFilter(raw: string): string[] {
   return raw
     .split(",")
-    .map((skill) => skill.trim().toLowerCase())
+    .map((skill: string) => skill.trim().toLowerCase())
     .filter(Boolean);
 }
 
@@ -137,9 +137,10 @@ function matchesSkillFilter(candidateSkills: string[], searchSkills: string[]): 
     return true;
   }
 
-  return searchSkills.some((wantedSkill) =>
+  return searchSkills.some((wantedSkill: string) =>
     candidateSkills.some(
-      (candidateSkill) => fuzzySimilarity(wantedSkill, candidateSkill.toLowerCase()) >= 0.6,
+      (candidateSkill: string) =>
+        fuzzySimilarity(wantedSkill, candidateSkill.toLowerCase()) >= 0.6,
     ),
   );
 }
@@ -154,7 +155,7 @@ export async function findCandidates(filters: CandidateFilters): Promise<Candida
   const allCandidates = await listCandidates();
   const searchSkills = parseSkillFilter(filters.skillsFilter ?? "");
 
-  return allCandidates.filter((candidate) => {
+  return allCandidates.filter((candidate: Candidate) => {
     if (!matchesSkillFilter(candidate.skills, searchSkills)) {
       return false;
     }
@@ -180,7 +181,7 @@ export async function getCandidateById(id: number): Promise<Candidate | null> {
 export function uploadedTodayCount(candidates: Candidate[]): number {
   const todayKey = new Date().toDateString();
   return candidates.filter(
-    (candidate) => candidate.uploadDate.toDateString() === todayKey,
+    (candidate: Candidate) => candidate.uploadDate.toDateString() === todayKey,
   ).length;
 }
 
@@ -190,11 +191,11 @@ export function dashboardTextFilter(candidates: Candidate[], query: string): Can
     return candidates;
   }
 
-  return candidates.filter((candidate) => {
+  return candidates.filter((candidate: Candidate) => {
     const inName = candidate.name.toLowerCase().includes(normalized);
     const inEmail = (candidate.email ?? "").toLowerCase().includes(normalized);
     const inPhone = (candidate.phone ?? "").toLowerCase().includes(normalized);
-    const inSkills = candidate.skills.some((skill) =>
+    const inSkills = candidate.skills.some((skill: string) =>
       skill.toLowerCase().includes(normalized),
     );
 
@@ -204,7 +205,7 @@ export function dashboardTextFilter(candidates: Candidate[], query: string): Can
 
 export function experienceToText(items: ExperienceItem[]): string {
   return items
-    .map((item) => {
+    .map((item: ExperienceItem) => {
       const role = item.position ?? "Role";
       const company = item.company ?? "Unknown company";
       const duration = item.duration ? ` (${item.duration})` : "";
@@ -215,7 +216,7 @@ export function experienceToText(items: ExperienceItem[]): string {
 
 export function educationToText(items: EducationItem[]): string {
   return items
-    .map((item) => {
+    .map((item: EducationItem) => {
       const degree = item.degree ?? "Degree";
       const institution = item.institution ?? "Institution";
       const year = item.year ? ` (${item.year})` : "";
