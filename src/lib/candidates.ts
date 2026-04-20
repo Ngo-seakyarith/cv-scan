@@ -1,7 +1,11 @@
-import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
-export type Candidate = Prisma.CandidateGetPayload<Prisma.CandidateDefaultArgs>;
+type JsonPrimitive = string | number | boolean | null;
+type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue };
+
+export type Candidate = NonNullable<
+  Awaited<ReturnType<typeof prisma.candidate.findUnique>>
+>;
 
 export type ExperienceItem = {
   position?: string;
@@ -29,7 +33,7 @@ function asRecord(value: unknown): Record<string, unknown> | null {
   return value as Record<string, unknown>;
 }
 
-export function toExperienceItems(value: Prisma.JsonValue | null): ExperienceItem[] {
+export function toExperienceItems(value: JsonValue | null): ExperienceItem[] {
   if (!Array.isArray(value)) {
     return [];
   }
@@ -56,7 +60,7 @@ export function toExperienceItems(value: Prisma.JsonValue | null): ExperienceIte
   return items;
 }
 
-export function toEducationItems(value: Prisma.JsonValue | null): EducationItem[] {
+export function toEducationItems(value: JsonValue | null): EducationItem[] {
   if (!Array.isArray(value)) {
     return [];
   }
