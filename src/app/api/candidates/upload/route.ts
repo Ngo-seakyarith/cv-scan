@@ -9,6 +9,7 @@ import {
 import { parseCvWithOpenRouter } from "@/lib/openrouter";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 function redirectWithMessage(
   requestUrl: string,
