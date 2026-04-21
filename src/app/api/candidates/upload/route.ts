@@ -30,7 +30,18 @@ export async function POST(request: Request) {
     });
   }
 
-  const formData = await request.formData();
+  let formData: FormData;
+  try {
+    formData = await request.formData();
+  } catch {
+    return redirectWithMessage(
+      request.url,
+      "/upload",
+      "error",
+      "Upload failed. Try a smaller PDF/DOCX file and retry.",
+    );
+  }
+
   const uploaded = formData.get("file");
 
   if (!(uploaded instanceof File)) {
