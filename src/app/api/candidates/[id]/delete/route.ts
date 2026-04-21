@@ -11,7 +11,9 @@ type RouteContext = {
 export async function POST(request: Request, context: RouteContext) {
   const session = await auth.api.getSession({ headers: request.headers });
   if (!session) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/sign-in", request.url), {
+      status: 303,
+    });
   }
 
   const { id } = await context.params;
@@ -27,12 +29,12 @@ export async function POST(request: Request, context: RouteContext) {
   if (Number.isNaN(candidateId)) {
     const invalidUrl = new URL(returnTo, request.url);
     invalidUrl.searchParams.set("error", "Invalid candidate id.");
-    return NextResponse.redirect(invalidUrl);
+    return NextResponse.redirect(invalidUrl, { status: 303 });
   }
 
   await prisma.candidate.delete({ where: { id: candidateId } }).catch(() => null);
 
   const redirectUrl = new URL(returnTo, request.url);
   redirectUrl.searchParams.set("success", "Candidate deleted successfully.");
-  return NextResponse.redirect(redirectUrl);
+  return NextResponse.redirect(redirectUrl, { status: 303 });
 }

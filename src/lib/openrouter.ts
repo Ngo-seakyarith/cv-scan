@@ -133,7 +133,6 @@ export async function parseCvWithOpenRouter(text: string): Promise<ParsedCvData>
           content: prompt,
         },
       ],
-      temperature: 0.1,
     }),
   });
 

@@ -18,13 +18,15 @@ function redirectWithMessage(
 ) {
   const url = new URL(pathname, requestUrl);
   url.searchParams.set(key, message);
-  return NextResponse.redirect(url);
+  return NextResponse.redirect(url, { status: 303 });
 }
 
 export async function POST(request: Request) {
   const session = await auth.api.getSession({ headers: request.headers });
   if (!session) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/sign-in", request.url), {
+      status: 303,
+    });
   }
 
   const formData = await request.formData();
@@ -90,12 +92,17 @@ export async function POST(request: Request) {
       "success",
       "CV uploaded and processed successfully.",
     );
-  } catch {
+  } catch (error) {
+    const message =
+      error instanceof Error && error.message.trim().length > 0
+        ? error.message.trim()
+        : "CV processing failed. Please try another file.";
+
     return redirectWithMessage(
       request.url,
       "/upload",
       "error",
-      "CV processing failed. Please try another file.",
+      message,
     );
   }
 }
