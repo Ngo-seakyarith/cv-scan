@@ -22,44 +22,44 @@ function redirectWithMessage(
 }
 
 export async function POST(request: Request) {
-  const session = await auth.api.getSession({ headers: request.headers });
-  if (!session) {
-    return NextResponse.redirect(new URL("/sign-in", request.url), {
-      status: 303,
-    });
-  }
-
-  const formData = await request.formData();
-  const uploaded = formData.get("file");
-
-  if (!(uploaded instanceof File)) {
-    return redirectWithMessage(
-      request.url,
-      "/upload",
-      "error",
-      "No file selected.",
-    );
-  }
-
-  if (!isSupportedCvFilename(uploaded.name)) {
-    return redirectWithMessage(
-      request.url,
-      "/upload",
-      "error",
-      "Invalid file type. Upload PDF or DOCX.",
-    );
-  }
-
-  if (uploaded.size > MAX_FILE_SIZE_BYTES) {
-    return redirectWithMessage(
-      request.url,
-      "/upload",
-      "error",
-      "File size exceeds 16MB.",
-    );
-  }
-
   try {
+    const session = await auth.api.getSession({ headers: request.headers });
+    if (!session) {
+      return NextResponse.redirect(new URL("/sign-in", request.url), {
+        status: 303,
+      });
+    }
+
+    const formData = await request.formData();
+    const uploaded = formData.get("file");
+
+    if (!(uploaded instanceof File)) {
+      return redirectWithMessage(
+        request.url,
+        "/upload",
+        "error",
+        "No file selected.",
+      );
+    }
+
+    if (!isSupportedCvFilename(uploaded.name)) {
+      return redirectWithMessage(
+        request.url,
+        "/upload",
+        "error",
+        "Invalid file type. Upload PDF or DOCX.",
+      );
+    }
+
+    if (uploaded.size > MAX_FILE_SIZE_BYTES) {
+      return redirectWithMessage(
+        request.url,
+        "/upload",
+        "error",
+        "File size exceeds 16MB.",
+      );
+    }
+
     const extractedText = await extractCvText(uploaded);
     const cvData = await parseCvWithOpenRouter(extractedText);
 
@@ -93,6 +93,8 @@ export async function POST(request: Request) {
       "CV uploaded and processed successfully.",
     );
   } catch (error) {
+    console.error("Upload route failed", error);
+
     const message =
       error instanceof Error && error.message.trim().length > 0
         ? error.message.trim()
