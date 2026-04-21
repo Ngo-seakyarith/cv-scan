@@ -4,8 +4,14 @@ export default function Home() {
   return (
     <div className="grid w-full gap-8 md:grid-cols-[1.35fr_1fr]">
       <section className="card-surface relative overflow-hidden p-8 md:p-12">
-        <div className="absolute -right-14 -top-14 h-40 w-40 rounded-full bg-teal-500/20 blur-2xl" />
-        <div className="absolute -bottom-16 left-16 h-44 w-44 rounded-full bg-orange-400/25 blur-2xl" />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-14 -top-14 h-40 w-40 rounded-full bg-teal-500/20 blur-2xl"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-16 left-16 h-44 w-44 rounded-full bg-orange-400/25 blur-2xl"
+        />
 
         <p className="mb-4 inline-flex rounded-full border border-[var(--line)] bg-white/80 px-3 py-1 text-xs font-semibold tracking-widest text-slate-600 uppercase">
           AI-Powered Resume Ops
@@ -24,7 +30,7 @@ export default function Home() {
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
             href="/sign-in"
-            className="rounded-full bg-teal-700 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-teal-800"
+            className="relative z-10 rounded-full bg-teal-700 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-teal-800"
           >
             Get Started
           </Link>
