@@ -8,7 +8,6 @@ import {
 } from "@/lib/cv-extraction";
 import { parseCvWithOpenRouter } from "@/lib/openrouter";
 
-export const runtime = "nodejs";
 export const maxDuration = 60;
 
 function redirectWithMessage(
@@ -30,18 +29,7 @@ export async function POST(request: Request) {
     });
   }
 
-  let formData: FormData;
-  try {
-    formData = await request.formData();
-  } catch {
-    return redirectWithMessage(
-      request.url,
-      "/upload",
-      "error",
-      "Upload failed. Try a smaller PDF/DOCX file and retry.",
-    );
-  }
-
+  const formData = await request.formData();
   const uploaded = formData.get("file");
 
   if (!(uploaded instanceof File)) {
