@@ -1,5 +1,5 @@
 import mammoth from "mammoth";
-import { PDFParse } from "pdf-parse";
+import { extractText, getDocumentProxy } from "unpdf";
 
 export const MAX_FILE_SIZE_BYTES = 16 * 1024 * 1024;
 
@@ -13,10 +13,9 @@ export async function extractCvText(file: File): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer());
 
   if (fileName.endsWith(".pdf")) {
-    const parser = new PDFParse({ data: buffer });
-    const parsed = await parser.getText();
-    await parser.destroy();
-    return parsed.text?.trim() ?? "";
+    const pdf = await getDocumentProxy(new Uint8Array(buffer));
+    const { text } = await extractText(pdf, { mergePages: true });
+    return (text as string)?.trim() ?? "";
   }
 
   if (fileName.endsWith(".docx")) {
