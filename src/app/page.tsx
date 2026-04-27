@@ -1,6 +1,14 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getServerSession } from "@/lib/session";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSession();
+
+  if (session) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="grid w-full gap-8 md:grid-cols-[1.35fr_1fr]">
       <section className="card-surface relative overflow-hidden p-8 md:p-12">
