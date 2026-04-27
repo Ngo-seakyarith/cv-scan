@@ -74,6 +74,7 @@ export async function POST(request: Request) {
     await prisma.candidate.create({
       data: {
         name: cvData.name || "Unknown",
+        userId: session.user.id,
         email: cvData.email,
         phone: cvData.phone,
         dateOfBirth,

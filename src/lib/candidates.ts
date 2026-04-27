@@ -16,6 +16,7 @@ export type EducationItem = {
 };
 
 type CandidateFilters = {
+  userId: string;
   skillsFilter?: string;
   minExperience?: number;
 };
@@ -139,14 +140,15 @@ function matchesSkillFilter(candidateSkills: string[], searchSkills: string[]): 
   );
 }
 
-export async function listCandidates(): Promise<Candidate[]> {
+export async function listCandidates(userId: string): Promise<Candidate[]> {
   return prisma.candidate.findMany({
+    where: { userId },
     orderBy: { uploadDate: "desc" },
   });
 }
 
 export async function findCandidates(filters: CandidateFilters): Promise<Candidate[]> {
-  const allCandidates = await listCandidates();
+  const allCandidates = await listCandidates(filters.userId);
   const searchSkills = parseSkillFilter(filters.skillsFilter ?? "");
 
   return allCandidates.filter((candidate: Candidate) => {
@@ -166,9 +168,12 @@ export async function findCandidates(filters: CandidateFilters): Promise<Candida
   });
 }
 
-export async function getCandidateById(id: number): Promise<Candidate | null> {
-  return prisma.candidate.findUnique({
-    where: { id },
+export async function getCandidateById(
+  id: number,
+  userId: string,
+): Promise<Candidate | null> {
+  return prisma.candidate.findFirst({
+    where: { id, userId },
   });
 }
 

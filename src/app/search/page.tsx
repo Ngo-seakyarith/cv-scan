@@ -31,7 +31,7 @@ export default async function SearchPage({
 }: {
   searchParams: SearchPageParams;
 }) {
-  await requireServerSession();
+  const session = await requireServerSession();
 
   const params = await searchParams;
 
@@ -45,7 +45,11 @@ export default async function SearchPage({
 
   const hasFilters = Boolean(skillsFilter || minExperienceRaw);
   const candidates = hasFilters
-    ? await findCandidates({ skillsFilter, minExperience })
+    ? await findCandidates({
+        userId: session.user.id,
+        skillsFilter,
+        minExperience,
+      })
     : [];
 
   return (

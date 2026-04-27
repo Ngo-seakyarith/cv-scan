@@ -14,7 +14,7 @@ export default async function CandidateDetailPage({
 }: {
   params: CandidateDetailParams;
 }) {
-  await requireServerSession();
+  const session = await requireServerSession();
 
   const { id } = await params;
   const candidateId = Number.parseInt(id, 10);
@@ -23,7 +23,7 @@ export default async function CandidateDetailPage({
     notFound();
   }
 
-  const candidate = await getCandidateById(candidateId);
+  const candidate = await getCandidateById(candidateId, session.user.id);
   if (!candidate) {
     notFound();
   }

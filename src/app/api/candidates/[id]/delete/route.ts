@@ -32,7 +32,12 @@ export async function POST(request: Request, context: RouteContext) {
     return NextResponse.redirect(invalidUrl, { status: 303 });
   }
 
-  await prisma.candidate.delete({ where: { id: candidateId } }).catch(() => null);
+  await prisma.candidate.deleteMany({
+    where: {
+      id: candidateId,
+      userId: session.user.id,
+    },
+  });
 
   const redirectUrl = new URL(returnTo, request.url);
   redirectUrl.searchParams.set("success", "Candidate deleted successfully.");

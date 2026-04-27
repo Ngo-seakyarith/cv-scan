@@ -23,6 +23,7 @@ export async function GET(request: Request) {
   const minExperience = minExperienceRaw ? Number(minExperienceRaw) : undefined;
 
   const candidates = await findCandidates({
+    userId: session.user.id,
     skillsFilter,
     minExperience:
       typeof minExperience === "number" && Number.isFinite(minExperience)

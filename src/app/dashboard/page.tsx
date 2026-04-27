@@ -17,12 +17,12 @@ export default async function DashboardPage({
 }: {
   searchParams: DashboardSearchParams;
 }) {
-  await requireServerSession();
+  const session = await requireServerSession();
 
   const params = await searchParams;
   const query = params.q?.trim() ?? "";
 
-  const candidates = await listCandidates();
+  const candidates = await listCandidates(session.user.id);
   const visibleCandidates = dashboardTextFilter(candidates, query);
 
   return (
